@@ -1,7 +1,7 @@
-# Security
+# Безопасность
 
-If you find a way for an imported SVG or project to execute code, load external resources or bypass the documented limits, report it to hello@dobropalm.tech. Please include a minimal file and reproduction steps, without personal data or credentials.
+Если загруженный SVG или проект позволяет выполнить код, обратиться к внешнему ресурсу или обойти ограничения импорта, напишите на hello@dobropalm.tech. Приложите минимальный пример файла и шаги воспроизведения без личных данных и учётных данных.
 
-Do not publish an exploit containing private data in a public issue. This project has no bug bounty or guaranteed response period.
+Не публикуйте в открытых задачах GitHub примеры с конфиденциальной информацией. У проекта нет программы вознаграждений за найденные уязвимости; срок ответа не установлен.
 
-Files are processed locally in the browser. The importer supports a restricted SVG subset; it does not guarantee compatibility with every SVG viewer. Tests are regression evidence, not a guarantee that all vulnerabilities have been excluded.
+Файлы обрабатываются в браузере. Импорт поддерживает ограниченный набор SVG-элементов, поэтому совместимость со всеми просмотрщиками не гарантируется. Тесты проверяют известные сценарии, но не доказывают отсутствие всех уязвимостей.
