@@ -1,0 +1,928 @@
+/* Слойра — © 2026 Павлович Александр Кириллович / dobropalm. Code: MIT. Artwork: ASSET-NOTICE.md. */
+:root {
+  color-scheme: dark;
+  --page: #101112;
+  --panel: #1b1c1e;
+  --field: #252629;
+  --hover: #303236;
+  --line: #34363a;
+  --control-line: #575a60;
+  --text: #f5f5f5;
+  --muted: #a7aaaf;
+  --accent: #d9ff53;
+  --accent-hover: #e7ff8c;
+  --radius: 12px;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  background: var(--page);
+  color: var(--text);
+  font:
+    14px/1.5 -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  /* Keep page pan/pinch, but reserve double taps for editor actions. */
+  touch-action: manipulation;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button,
+summary {
+  cursor: pointer;
+}
+button,
+select,
+input[type="search"],
+textarea {
+  background: var(--field);
+  color: var(--text);
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+}
+button {
+  min-height: 44px;
+  padding: 9px 13px;
+  font-size: 12px;
+  font-weight: 550;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+button:hover {
+  background: var(--hover);
+  border-color: #8b8e95;
+}
+button:active {
+  background: #3d4044;
+}
+button:disabled,
+input:disabled,
+select:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+a:focus-visible,
+#canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+#canvas:focus-visible {
+  outline-offset: -3px;
+}
+[hidden] {
+  display: none !important;
+}
+.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1c220c;
+  font-weight: 650;
+}
+.primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+.app-bar {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding: 0 28px;
+  border-bottom: 1px solid #27282b;
+}
+.brand {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 11px;
+  min-height: 44px;
+  text-decoration: none;
+  color: var(--text);
+}
+.brand-wordmark {
+  display: block;
+  flex: none;
+  width: 142px;
+  min-width: 142px;
+  height: 36px;
+  overflow: visible;
+}
+.brand-accent {
+  stroke: var(--accent);
+}
+.app-bar h1 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--muted);
+}
+.document-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.bar-button {
+  background: transparent;
+  border-color: #45474b;
+  padding-inline: 17px;
+}
+.export-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  padding-inline: 19px;
+}
+.workspace {
+  height: calc(100dvh - 72px - 88px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr) 228px;
+  gap: 16px;
+  padding: 20px;
+}
+.library-panel,
+.inspector-panel {
+  min-width: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4c4f54 transparent;
+  overscroll-behavior: contain;
+  background: var(--panel);
+  border-radius: 16px;
+}
+.panel-section {
+  padding: 20px;
+}
+h2 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 16px;
+  letter-spacing: -0.15px;
+}
+#search {
+  width: 100%;
+  min-height: 44px;
+  border-color: #44474c;
+  padding: 9px 11px;
+  font-size: 12px;
+  margin-bottom: 17px;
+}
+::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+#library {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+#library button {
+  min-width: 0;
+  padding: 0 0 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  background: var(--field);
+  border-color: transparent;
+  border-radius: 9px;
+  color: #dedfe2;
+  font-size: 11px;
+  font-weight: 450;
+}
+#library button:hover {
+  border-color: var(--accent);
+  background: #30332b;
+}
+#library button svg {
+  display: block;
+  width: 100%;
+  height: 82px;
+  padding: 8px;
+  background: #f1f1ed;
+  overflow: hidden;
+}
+.file-tools {
+  padding: 0 20px 20px;
+}
+.file-tools summary {
+  color: var(--muted);
+  min-height: 44px;
+  list-style-position: inside;
+  padding: 9px 0;
+  font-size: 12px;
+}
+.file-fields {
+  display: grid;
+  gap: 9px;
+  padding: 6px 0;
+}
+.file-fields label {
+  font-size: 11px;
+  margin-top: 8px;
+  color: #c9cbd0;
+}
+input[type="file"] {
+  width: 100%;
+  min-width: 0;
+  font-size: 10px;
+  color: var(--muted);
+}
+input[type="file"]::file-selector-button {
+  border: 1px solid var(--control-line);
+  background: var(--field);
+  color: var(--text);
+  border-radius: 5px;
+  min-height: 44px;
+  padding: 9px 7px;
+  margin-right: 6px;
+  cursor: pointer;
+}
+.canvas-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 0;
+}
+.canvas-toolbar {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 4px 10px;
+}
+#count {
+  color: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.canvas-toolbar label {
+  display: flex;
+}
+select {
+  min-height: 44px;
+  padding: 8px 30px 8px 11px;
+  font-size: 12px;
+}
+.canvas-toolbar select {
+  min-height: 44px;
+  background: #1c1d20;
+  border-color: #3b3e43;
+  border-radius: 7px;
+  font-size: 11px;
+  padding-block: 5px;
+}
+.canvas-viewport {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  overflow: auto;
+}
+.stage {
+  position: relative;
+  width: min(100%, 920px);
+  overflow: hidden;
+  border-radius: 14px;
+  background: #d7cdf5;
+}
+#canvas {
+  display: block;
+  width: 100%;
+  max-height: calc(100dvh - 390px);
+  min-height: 0;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+#canvas [data-object] > svg,
+#canvas [data-selection] {
+  touch-action: none;
+}
+svg [data-object] {
+  cursor: grab;
+}
+svg [data-object]:active {
+  cursor: grabbing;
+}
+.watermark {
+  position: absolute;
+  right: 17px;
+  bottom: 12px;
+  z-index: 2;
+  color: #19171f61;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.4px;
+  pointer-events: none;
+  user-select: none;
+}
+#empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 10px;
+  color: #3f3852;
+  pointer-events: none;
+  text-align: center;
+}
+#empty > svg {
+  width: 39px;
+  height: 39px;
+  fill: none;
+  stroke: #706583;
+  stroke-width: 1.4;
+  margin-bottom: 8px;
+}
+#empty strong {
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+}
+#empty span {
+  max-width: 260px;
+  font-size: 12px;
+}
+.canvas-hint {
+  color: var(--muted);
+  margin: 6px 0 16px;
+  text-align: center;
+  font-size: 11px;
+}
+.compose-section {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px 17px 12px;
+  border: 1px solid #3d3f44;
+  border-radius: 18px;
+  background: #232427;
+}
+.prompt-row {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+textarea {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  min-height: 56px;
+  max-height: 130px;
+  resize: vertical;
+  border: 0;
+  background: transparent;
+  padding: 5px 2px;
+  font-size: 14px;
+  line-height: 1.65;
+  border-radius: 4px;
+}
+#compose {
+  align-self: center;
+  min-width: 132px;
+  min-height: 52px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  font-size: 13px;
+}
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 9px 0 0;
+}
+.examples button {
+  min-height: 44px;
+  padding: 5px 10px;
+  border: 0;
+  background: #303237;
+  color: #d7d8db;
+  font-size: 11px;
+  font-weight: 450;
+}
+.examples button:hover {
+  background: #43464d;
+}
+#notice {
+  min-height: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 9px 1px 0;
+  overflow-wrap: anywhere;
+}
+#notice:empty {
+  display: none;
+}
+.inspector-panel .panel-section + .panel-section {
+  border-top: 1px solid #34363a;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 15px 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+.field select {
+  width: 100%;
+  background: #27292d;
+}
+.color-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11px;
+  margin: 16px 0 0;
+}
+input[type="color"] {
+  width: 44px;
+  height: 44px;
+  padding: 3px;
+  border: 1px solid var(--control-line);
+  border-radius: 6px;
+  background: var(--field);
+  cursor: pointer;
+}
+.wide-button {
+  width: 100%;
+  margin-top: 14px;
+}
+.selection-name {
+  margin: 0;
+  color: #e6e7e9;
+  min-height: 28px;
+  font-size: 14px;
+  font-weight: 450;
+  overflow-wrap: anywhere;
+}
+.range-field {
+  margin-top: 20px;
+}
+input[type="range"] {
+  accent-color: var(--accent);
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  cursor: pointer;
+}
+.delete-button {
+  background: transparent;
+  color: #eab8ad;
+}
+.delete-button:hover {
+  background: #3b2a27;
+  border-color: #b47464;
+}
+.layers-section h2 {
+  margin-bottom: 7px;
+}
+.layer-hint {
+  color: var(--muted);
+  font-size: 10px;
+  margin: 0 0 12px;
+}
+#layers > div {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  padding: 5px 0;
+  border-top: 1px solid #34363a;
+}
+#layers button {
+  min-height: 44px;
+  font-size: 11px;
+  min-width: 44px;
+  padding: 6px 8px;
+}
+#layers .layer-name {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: transparent;
+  border-color: transparent;
+  padding-left: 0;
+}
+#layers .layer-name:hover {
+  background: var(--hover);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* Wide desktops keep the canvas centred between independent scrolling panels. */
+@media (min-width: 1600px) {
+  .workspace {
+    grid-template-columns: 270px minmax(0, 1fr) 250px;
+    gap: 24px;
+    padding: 24px;
+  }
+  .panel-section {
+    padding: 24px;
+  }
+  .canvas-viewport {
+    padding: 14px 32px;
+  }
+}
+/* Tablet widths use two columns: the inspector moves below the canvas instead
+   of taking away its usable width. The document scrolls as a single page. */
+@media (max-width: 1199px) {
+  html,
+  body {
+    height: auto;
+    overflow: visible;
+  }
+  .app-bar {
+    padding: 0 20px;
+    gap: 20px;
+  }
+  .workspace {
+    height: auto;
+    min-height: calc(100dvh - 72px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    grid-template-columns: 200px minmax(0, 1fr);
+    align-items: start;
+    gap: 16px;
+    padding: 16px;
+  }
+  .library-panel {
+    grid-row: 1 / 3;
+  }
+  .library-panel,
+  .inspector-panel {
+    overflow: visible;
+  }
+  .panel-section {
+    padding: 18px 16px;
+  }
+  .file-tools {
+    padding: 0 16px 18px;
+  }
+  #library {
+    gap: 8px;
+  }
+  #library button svg {
+    height: 76px;
+  }
+  .canvas-panel {
+    min-height: 0;
+  }
+  .canvas-viewport {
+    flex: none;
+    padding: 10px 0;
+  }
+  #canvas {
+    max-height: none;
+  }
+  .canvas-hint {
+    margin-bottom: 14px;
+  }
+  .compose-section {
+    padding: 14px;
+  }
+  .prompt-row {
+    gap: 12px;
+  }
+  #compose {
+    min-width: 108px;
+    gap: 12px;
+  }
+  .inspector-panel {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* Phones and small tablets: canvas, library, then full-width editing controls.
+   Three readable library cards fit even at 320px; no compressed five-card row. */
+@media (max-width: 719px) {
+  .app-bar {
+    height: auto;
+    min-height: 72px;
+    padding: 14px 16px;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+  }
+  .brand {
+    font-size: 20px;
+    gap: 9px;
+  }
+  .brand-wordmark {
+    width: 156px;
+    min-width: 156px;
+    height: 40px;
+  }
+  .app-bar h1 {
+    display: none;
+  }
+  .document-actions {
+    gap: 8px;
+  }
+  .document-actions button {
+    padding-inline: 12px;
+  }
+  .export-button {
+    gap: 12px;
+  }
+  .workspace {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 16px;
+    gap: 16px;
+  }
+  .canvas-panel,
+  .library-panel,
+  .inspector-panel {
+    width: 100%;
+  }
+  .canvas-panel {
+    order: 0;
+  }
+  .library-panel {
+    order: 1;
+  }
+  .inspector-panel {
+    order: 2;
+  }
+  .canvas-toolbar {
+    padding-inline: 0;
+    gap: 8px;
+  }
+  .canvas-toolbar select {
+    font-size: 16px;
+  }
+  .stage {
+    border-radius: 12px;
+  }
+  .canvas-hint {
+    font-size: 11px;
+    margin: 6px 8px 16px;
+  }
+  .compose-section {
+    border-radius: 14px;
+  }
+  textarea,
+  #search,
+  select {
+    font-size: 16px;
+  }
+  textarea {
+    min-height: 72px;
+    max-height: 180px;
+  }
+  .examples {
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .examples button {
+    font-size: 12px;
+  }
+  #notice {
+    font-size: 12px;
+  }
+  .panel-section {
+    padding: 18px;
+  }
+  #search {
+    margin-bottom: 16px;
+  }
+  #library {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+  #library button {
+    font-size: 12px;
+    gap: 8px;
+  }
+  #library button svg {
+    height: 88px;
+  }
+  .file-tools {
+    padding: 0 18px 18px;
+  }
+  .file-fields label,
+  input[type="file"],
+  .field,
+  .color-row {
+    font-size: 12px;
+  }
+  input[type="file"]::file-selector-button {
+    font-size: 12px;
+    padding-inline: 10px;
+  }
+  .watermark {
+    right: 12px;
+    bottom: 9px;
+    font-size: 12px;
+  }
+  #empty > svg {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 0;
+  }
+  #empty strong {
+    font-size: 16px;
+  }
+  #empty span {
+    font-size: 11px;
+  }
+}
+@media (max-width: 479px) {
+  .app-bar {
+    padding: 14px 12px 12px;
+  }
+  .document-actions {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+  .document-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+  .workspace {
+    padding: 12px;
+    gap: 14px;
+  }
+  .prompt-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  #compose {
+    align-self: stretch;
+    min-height: 48px;
+  }
+  .examples {
+    gap: 6px;
+  }
+  .examples button {
+    flex: 1;
+    padding-inline: 6px;
+  }
+  #library {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  #library button svg {
+    height: 76px;
+  }
+  .inspector-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Short desktop windows and landscape screens must scroll instead of clipping
+   the canvas or prompt below a fixed-height workspace. */
+@media (min-width: 1200px) and (max-height: 819px) {
+  html,
+  body {
+    height: auto;
+    overflow: visible;
+  }
+  .workspace {
+    height: auto;
+    min-height: calc(100dvh - 72px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    align-items: start;
+  }
+  .library-panel,
+  .inspector-panel {
+    overflow: visible;
+  }
+  .canvas-viewport {
+    flex: none;
+  }
+  #canvas {
+    max-height: none;
+  }
+}
+/* Expanded object controls must remain reachable in the fixed desktop layout. */
+@media (min-width: 1200px) and (min-height: 820px) {
+  .canvas-panel {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4c4f54 transparent;
+  }
+  .canvas-panel > * {
+    flex-shrink: 0;
+  }
+  .canvas-viewport {
+    flex: 1 0 auto;
+    overflow: visible;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Keep object actions beside the canvas, including on narrow screens. */
+.object-tools { margin: 0 0 16px; padding: 14px; border: 1px solid #35373a; border-radius: 12px; background: var(--panel); }
+.stage, .stage * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+
+.object-tools .selection-name { display: block; min-height: 0; margin-bottom: 12px; font-size: 14px; font-weight: 500; }
+.quick-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; align-items: end; }
+.quick-actions button { min-width: 0; padding: 8px 6px; border-color: #44474c; background: #252629; }
+.quick-actions button:hover { background: #34363a; }
+.quick-actions .delete-button { color: #eab8ad; background: transparent; }
+.precise-tools { margin-top: 10px; border-top: 1px solid var(--line); }
+.precise-tools summary { min-height: 44px; display: flex; align-items: center; color: var(--muted); font-size: 12px; gap: 8px; }
+.precise-tools summary::before { content: "+"; font-size: 18px; font-weight: 400; }
+.precise-tools[open] summary::before { content: "−"; }
+.precise-tools summary::-webkit-details-marker { display: none; }
+.precise-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.precise-fields .field { margin: 0 0 6px; }
+@media (max-width: 479px) {
+  .quick-actions button { font-size: 12px; }
+  .precise-fields { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+}
+
+.layer-controls { grid-column: span 2; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; min-width: 0; }
+.layer-controls > span { grid-column: 1 / -1; color: var(--muted); font-size: 10px; line-height: 1.2; }
+
+body.privacy-page { height: auto; min-height: 100%; overflow: auto; }
+.privacy-document { width: min(100%, 760px); margin: 0 auto; padding: 32px 24px 64px; font-size: 16px; line-height: 1.7; }
+.privacy-document a { color: var(--accent); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.privacy-back { display: inline-flex; align-items: center; min-height: 44px; }
+.privacy-document h1 { margin: 24px 0 8px; font-size: clamp(28px, 5vw, 40px); line-height: 1.2; letter-spacing: -0.03em; }
+.privacy-document h2 { margin: 32px 0 12px; font-size: 21px; line-height: 1.35; }
+.privacy-document p { margin: 0 0 16px; }
+.privacy-document .privacy-date { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+.privacy-document a:focus-visible, .editor-footer a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+@media (max-width: 480px) { .privacy-document { padding: 16px 20px 40px; } }
+
+.editor-footer { height: 88px; padding: 12px 24px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px 32px; color: var(--muted); font-size: 12px; }
+.footer-owner p { margin: 0; }
+.editor-footer nav { display: flex; flex-wrap: wrap; gap: 0 24px; }
+.editor-footer a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); text-underline-offset: 4px; overflow-wrap: anywhere; }
+.editor-footer a:hover { color: var(--text); }
+@media (max-width: 1199px), (max-height: 819px) {
+  .editor-footer { height: auto; min-height: 88px; }
+}
+@media (max-width: 719px) {
+  .editor-footer { padding: 16px 20px; align-items: flex-start; flex-direction: column; gap: 8px; }
+  .editor-footer nav { gap: 0 20px; }
+}
+
+#canvas .transform-handle { touch-action: none; pointer-events: all; }
+#canvas .handle-nw, #canvas .handle-se { cursor: nwse-resize; }
+#canvas .handle-ne, #canvas .handle-sw { cursor: nesw-resize; }
+#canvas .handle-rotate { cursor: crosshair; }
+
+#layers > div { position: relative; }
+#layers .layer-grip { flex: 0 0 44px; color: var(--muted); background: transparent; border-color: transparent; font-size: 22px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+#layers .layer-grip:hover { color: var(--text); background: var(--hover); }
+#layers .layer-grip:active { cursor: grabbing; }
+#layers .layer-dragging { opacity: .45; }
+#layers .drop-before::before, #layers .drop-after::after { content: ""; position: absolute; left: 0; right: 0; height: 2px; background: var(--accent); pointer-events: none; }
+#layers .drop-before::before { top: -1px; }
+#layers .drop-after::after { bottom: -1px; }
